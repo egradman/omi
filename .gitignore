@@ -161,3 +161,7 @@ app/lib/env/prod_env.g.dart
 /backend/scripts/stt/results
 /backend/scripts/stt/diarization.json
 /docs/.docusaurus
+
+backend/google_application_credentials.json
+letsencrypt/
+

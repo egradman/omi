@@ -1,0 +1,42 @@
+services:
+  redis:
+    image: redis
+    restart: unless-stopped
+
+  omi:
+    build: backend
+    depends_on:
+      - redis
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - ./google_application_credentials.json:/app/google_application_credentials.json
+    restart: unless-stopped
+    env_file: ./backend/.env
+    environment:
+      -  WATCHFILES_FORCE_POLLING=true
+
+  nginx:
+    image: jonasal/nginx-certbot:latest
+    depends_on:
+      - omi
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./user_conf.d:/etc/nginx/user_conf.d:ro
+      - ./letsencrypt/:/etc/letsencrypt/:rw
+    environment:
+      - CERTBOT_EMAIL=eric@gradman.com
+      - DEBUG=1
+
+  hole:
+    build: ./hole
+    restart: unless-stopped
+    volumes:
+      - ./hole:/app
+    environment:
+      -  WATCHFILES_FORCE_POLLING=true
+
