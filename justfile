@@ -19,9 +19,9 @@ ngrok:
 
 watch-sync:
    fd -e py ".*" backend | entr -n just sync
-  
+
 sync:
-  rsync -avz  --exclude="*.pyc" ./ egradman@dmz.gradman.com:omi
+  rsync -avz  --exclude="*.pyc" ./backend/ egradman@dmz.gradman.com:omi/backend
 
 logs:
   docker compose logs --tail 100 --follow
